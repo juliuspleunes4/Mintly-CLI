@@ -40,11 +40,11 @@ Edit `src/token-metadata.json` with your token details:
 - Change the decimals to the number of decimals you want your token to have.
 - Change the attributes to your own.
 
-### Add your image
+## 🖼️ Step 2: Add your image
 
 Replace the `src/image.png` with your own. Recommendation: 512x512px for example. 
 
-## 🔑 Step 3: Create Solana Keypair (optional)
+## 🔑 Step 3: Create a vanity address for your token (optional)
 
 This step is optional if you don't want a cool vanity address for your token.
 The command creates a token address that starts with a prefix of your choice. Everything above 4 letters will take a long time to generate. Replace `TEST:1` with your prefix you want your token to have.
@@ -58,7 +58,7 @@ solana-keygen grind --starts-with TEST:1 | tee /dev/tty | grep -oE '[1-9A-HJ-NP-
 
 This will generate a keypair file that we will be used as the address for you token.
 
-## 📤 Step 3: Create the token
+## 📤 Step 4: Create the token
 
 Install the dependencies
 
