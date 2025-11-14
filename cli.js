@@ -8,7 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bs58 from 'bs58';
 import { Keypair } from '@solana/web3.js';
-import { execSync } from 'child_process';
+import { spawnSync, execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,7 +30,7 @@ console.log(chalk.gray('━'.repeat(60)));
 console.log(chalk.magenta.bold('  🪙  Create Solana SPL Tokens with Metadata'));
 console.log(chalk.gray('  Free & Open Source CLI Tool'));
 console.log(chalk.gray('  https://www.mintly.cc'));
-console.log(chalk.gray('  Version 1.0.0'));
+console.log(chalk.gray('  Version 1.1.3'));
 console.log(chalk.gray('━'.repeat(60)));
 console.log();
 
@@ -40,8 +40,11 @@ async function main() {
     console.log(chalk.green.bold('👋 Welcome to Mintly CLI!\n'));
     console.log(chalk.white('This interactive wizard will guide you through creating your SPL token.\n'));
 
-    // Step 1: Wallet setup
-    console.log(chalk.yellow.bold('📝 STEP 1: Wallet Setup\n'));
+    // Wallet setup loop (allows retry on errors)
+    let walletConfigured = false;
+    while (!walletConfigured) {
+      // Step 1: Wallet setup
+      console.log(chalk.yellow.bold('📝 STEP 1: Wallet Setup\n'));
     
     const { walletChoice } = await inquirer.prompt([
       {
@@ -83,6 +86,7 @@ async function main() {
         const walletPath = path.resolve(__dirname, 'src', 'wallet.json');
         fs.writeFileSync(walletPath, JSON.stringify(privateKeyArray, null, 2));
         console.log(chalk.green('✅ Wallet saved to src/wallet.json\n'));
+        walletConfigured = true;
       } catch (error) {
         console.log(chalk.red('❌ Error saving wallet:', error.message));
         return;
@@ -90,21 +94,54 @@ async function main() {
     } else if (walletChoice === 'existing') {
       const walletPath = path.resolve(__dirname, 'src', 'wallet.json');
       if (!fs.existsSync(walletPath)) {
-        console.log(chalk.red('❌ wallet.json not found in src/ directory'));
+        console.log(chalk.red('\n❌ wallet.json not found in src/ directory'));
         console.log(chalk.yellow('💡 Please place your wallet.json in the src/ folder and try again\n'));
-        return;
+        
+        const { retry } = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'retry',
+            message: 'Would you like to choose a different wallet option?',
+            default: true,
+          },
+        ]);
+        
+        if (!retry) {
+          console.log(chalk.yellow('\n⚠️  Exiting...\n'));
+          return;
+        }
+        console.log(chalk.cyan('\n🔄 Restarting wallet setup...\n'));
+        continue; // Restart the wallet setup loop
       }
       console.log(chalk.green('✅ Using existing wallet.json\n'));
+      walletConfigured = true;
     } else {
       const homedir = process.env.HOME || process.env.USERPROFILE;
       const defaultWalletPath = `${homedir}/.config/solana/id.json`;
       if (!fs.existsSync(defaultWalletPath)) {
-        console.log(chalk.red('❌ Default Solana wallet not found'));
+        console.log(chalk.red('\n❌ Default Solana wallet not found'));
         console.log(chalk.yellow('💡 Run: solana-keygen new\n'));
-        return;
+        
+        const { retry } = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'retry',
+            message: 'Would you like to choose a different wallet option?',
+            default: true,
+          },
+        ]);
+        
+        if (!retry) {
+          console.log(chalk.yellow('\n⚠️  Exiting...\n'));
+          return;
+        }
+        console.log(chalk.cyan('\n🔄 Restarting wallet setup...\n'));
+        continue; // Restart the wallet setup loop
       }
       console.log(chalk.green('✅ Using default Solana CLI wallet\n'));
+      walletConfigured = true;
     }
+    } // End wallet setup loop
 
     // Step 2: Token metadata
     console.log(chalk.yellow.bold('📝 STEP 2: Token Metadata\n'));
@@ -292,15 +329,25 @@ async function main() {
     console.log();
 
     try {
-      // Import and run the mint script
-      const { default: mintToken } = await import('./src/mint-token-with-metadata.js');
-      // The script will run automatically when imported
+      // Run the mint script as a child process
+      const result = spawnSync('node', ['src/mint-token-with-metadata.js'], {
+        cwd: __dirname,
+        stdio: 'inherit',
+        shell: true
+      });
       
       console.log();
       console.log(chalk.gray('━'.repeat(60)));
-      console.log(chalk.green.bold('\n🎉 Token created successfully!\n'));
-      console.log(chalk.white('Your token has been minted and is ready to use.'));
-      console.log(chalk.gray('\nThank you for using Mintly! 💚\n'));
+      
+      if (result.status === 0) {
+        console.log(chalk.green.bold('\n🎉 Token created successfully!\n'));
+        console.log(chalk.white('Your token has been minted and is ready to use.'));
+        console.log(chalk.gray('\nThank you for using Mintly! 💚\n'));
+      } else {
+        console.log(chalk.red.bold('\n❌ Token creation failed\n'));
+        console.log(chalk.red('Please check the error messages above.'));
+        console.log();
+      }
     } catch (error) {
       console.log();
       console.log(chalk.gray('━'.repeat(60)));
@@ -315,6 +362,14 @@ async function main() {
     } else {
       console.log(chalk.red('\n❌ An error occurred:', error.message));
     }
+  } finally {
+    // Pause before closing (helpful when running from double-click)
+    console.log(chalk.gray('\nPress any key to exit...'));
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.once('data', () => {
+      process.exit(0);
+    });
   }
 }
 
