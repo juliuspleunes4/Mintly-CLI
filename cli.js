@@ -30,7 +30,7 @@ console.log(chalk.gray('━'.repeat(60)));
 console.log(chalk.magenta.bold('  🪙  Create Solana SPL Tokens with Metadata'));
 console.log(chalk.gray('  Free & Open Source CLI Tool'));
 console.log(chalk.gray('  https://www.mintly.cc'));
-console.log(chalk.gray('  Version 1.1.3'));
+console.log(chalk.gray('  Version 1.1.4'));
 console.log(chalk.gray('━'.repeat(60)));
 console.log();
 
@@ -343,10 +343,17 @@ async function main() {
         console.log(chalk.green.bold('\n🎉 Token created successfully!\n'));
         console.log(chalk.white('Your token has been minted and is ready to use.'));
         console.log(chalk.gray('\nThank you for using Mintly! 💚\n'));
+      } else if (result.status === 1) {
+        console.log(chalk.red.bold('\n❌ Token creation failed!\n'));
+        console.log(chalk.yellow('Please read the error messages above carefully.'));
+        console.log(chalk.gray('Common issues:'));
+        console.log(chalk.gray('  • Insufficient SOL balance'));
+        console.log(chalk.gray('  • Token already exists (delete token-mint-address.json to create a new one)'));
+        console.log(chalk.gray('  • Network connection issues\n'));
       } else {
-        console.log(chalk.red.bold('\n❌ Token creation failed\n'));
-        console.log(chalk.red('Please check the error messages above.'));
-        console.log();
+        console.log(chalk.red.bold('\n❌ An unexpected error occurred\n'));
+        console.log(chalk.red('Exit code:', result.status));
+        console.log(chalk.yellow('Please check the error messages above.\n'));
       }
     } catch (error) {
       console.log();

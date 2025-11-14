@@ -150,12 +150,24 @@ async function mintTokenWithMetadata() {
     const balance = await connection.getBalance(walletKeypair.publicKey);
     console.log(`💰 Wallet balance: ${balance / 1e9} SOL`);
 
-    if (balance < 0.1 * 1e9) {
+    // Set minimum required balance based on network
+    const minRequired = NETWORK === 'devnet' ? 0.05 : 0.02;
+    
+    if (balance < minRequired * 1e9) {
+      console.error(`\n❌ INSUFFICIENT FUNDS!`);
+      console.error(`   You have: ${balance / 1e9} SOL`);
+      console.error(`   You need: At least ${minRequired} SOL to create a token\n`);
+      
+      if (NETWORK === 'devnet') {
+        console.error(`💡 Get free devnet SOL from: https://faucet.solana.com/`);
+      } else {
+        console.error(`💡 Add more SOL to your wallet (buy from an exchange)`);
+      }
+      console.error(`   Wallet address: ${walletKeypair.publicKey.toString()}\n`);
+      process.exit(1);
+    } else if (balance < 0.1 * 1e9) {
       console.log(
-        "⚠️  Low balance! You might need more SOL for this operation."
-      );
-      console.log(
-        `If you are on devnet you can get devnet SOL from: https://faucet.solana.com/`
+        "⚠️  Low balance warning: You have enough to proceed, but consider adding more SOL for future transactions."
       );
     }
 
@@ -166,17 +178,20 @@ async function mintTokenWithMetadata() {
         MINT_KEYPAIR.publicKey
       );
       if (mintAccountInfo && mintAccountInfo.data.length > 0) {
-        console.log("🔄 Token already exists!");
-        console.log(`✅ Mint address: ${MINT_KEYPAIR.publicKey.toString()}`);
-        console.log("💡 To create a new token:");
-        console.log(
-          "   1. Delete or rename the token-mint-address.json file or replace the content with a new keypair. See readme.md"
+        console.error("\n❌ TOKEN ALREADY EXISTS!");
+        console.error(`   Mint address: ${MINT_KEYPAIR.publicKey.toString()}`);
+        console.error(`   Explorer: https://explorer.solana.com/address/${MINT_KEYPAIR.publicKey.toString()}${NETWORK === 'devnet' ? '?cluster=devnet' : ''}\n`);
+        console.error("💡 To create a NEW token, you must:");
+        console.error(
+          "   1. Delete the file: src/token-mint-address.json"
         );
-        console.log("   2. Run this script again");
-        console.log(
-          "   3. A new token will be created with a different address"
+        console.error("   2. Run this command again");
+        console.error(
+          "   3. A new token with a different address will be created\n"
         );
-        return;
+        console.error("⚠️  WARNING: Each token has a unique address. If you delete");
+        console.error("   token-mint-address.json, you'll create a DIFFERENT token!\n");
+        process.exit(1);
       }
     } catch (error) {
       console.log(
