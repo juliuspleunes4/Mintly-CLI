@@ -53,9 +53,38 @@ cd mintly-cli
 npm install
 ```
 
-### Wallet Setup
+## 🎯 Two Ways to Use Mintly
 
-You have two options for wallet configuration:
+### 🌟 Option A: Interactive Mode (Recommended for Beginners)
+
+The easiest way to create your token! An interactive wizard guides you through every step with colorful prompts.
+
+**Windows Users:**
+1. Double-click `mintly.bat` on your desktop
+2. Follow the interactive prompts
+
+**All Users (Command Line):**
+```bash
+npm start
+```
+
+The interactive wizard will:
+- ✨ Display beautiful ASCII art and colored prompts
+- 🔐 Help you set up your wallet (base58, default Solana CLI, or wallet.json)
+- 📝 Guide you through token metadata (name, symbol, supply, etc.)
+- 🖼️ Prompt you for your token image
+- 🎯 Optionally create a vanity address
+- 🚀 Create your token with a single confirmation
+
+Perfect for first-time users or quick token creation!
+
+### 🛠️ Option B: Manual Mode (Advanced Users)
+
+For developers who prefer direct control or want to automate the process.
+
+#### Wallet Setup
+
+You have three options for wallet configuration:
 
 **Option 1: Use Default Solana CLI Wallet**
 - The tool will automatically use your [default Solana wallet](https://solana.com/docs/intro/installation#create-wallet)
@@ -72,7 +101,12 @@ If you have a base58-encoded private key (from Phantom, Solflare, etc.):
    ```
 4. This will automatically create `src/wallet.json` with your wallet
 
-## 📝 Step-by-Step Guide
+**Option 3: Manual wallet.json**
+- Place your wallet keypair JSON directly in `src/wallet.json`
+
+---
+
+## 📝 Manual Mode: Step-by-Step Guide
 
 ### Step 1: Configure Token Metadata
 
@@ -115,7 +149,7 @@ Replace `src/image.png` with your token image:
 
 ### Step 3: Generate Vanity Address (Optional)
 
-Create a custom token address with a specific prefix:
+Create a custom token address with a specific prefix (Linux/Mac only):
 
 ```bash
 cd src
@@ -126,6 +160,7 @@ solana-keygen grind --starts-with MINT:1 | tee /dev/tty | grep -oE '[1-9A-HJ-NP-
 - Replace `MINT:1` with your desired prefix
 - Prefixes longer than 4 characters may take significant time
 - This overwrites `token-mint-address.json` - back it up if needed
+- **Note:** This command is for Linux/Mac. Windows users should use the interactive mode for vanity addresses.
 
 ### Step 4: Create Your Token
 
