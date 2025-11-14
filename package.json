@@ -5,6 +5,7 @@
   "main": "src/mint-token-with-metadata.js",
   "type": "module",
   "scripts": {
+    "start": "node cli.js",
     "mint": "node src/mint-token-with-metadata.js",
     "upload": "node src/upload-image-and-metadata.js",
     "convert-key": "node convert-key.js"
@@ -25,7 +26,10 @@
     "@solana-developers/helpers": "^2.8.1",
     "@solana/spl-token": "^0.4.13",
     "@solana/web3.js": "^1.87.6",
-    "bs58": "^6.0.0"
+    "bs58": "^6.0.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "figlet": "^1.7.0"
   },
   "keywords": [
     "solana",

@@ -29,33 +29,137 @@ Both versions are fully open-source and maintained primarily by [Julius Pleunes]
 ## ✨ Features
 
 - 🎨 Create SPL tokens with custom images and metadata
-- 🔐 Support for wallet.json or default Solana CLI wallet
+- 🎮 **Interactive wizard mode** - perfect for beginners!
+- 🔐 Multiple wallet options (Phantom, Solflare, Solana CLI, or wallet.json)
 - 🎯 Optional vanity address generation
-- 🌐 Works on devnet and mainnet
+- 🌐 Works on devnet (free testing) and mainnet (production)
 - 💰 **No service fees** - only pay standard Solana network costs
-- 📝 Base58 private key conversion utility
+- 📝 Automatic base58 private key conversion
+- 🎨 Beautiful colored terminal interface
+- ⚡ Fast and easy - create tokens in under 2 minutes
+
+## ⚡ What You'll Need
+
+Before creating your token, have these ready:
+
+- ✅ **Node.js installed** (download from [nodejs.org](https://nodejs.org/))
+- ✅ **Your wallet's private key** (from Phantom, Solflare, etc.) OR Solana CLI wallet
+- ✅ **Some SOL** for transaction fees:
+  - Testing (devnet): Get free SOL at [faucet.solana.com](https://faucet.solana.com)
+  - Production (mainnet): ~0.01-0.02 SOL (buy from any exchange)
+- ✅ **Token image** (PNG or JPG, 512x512px recommended)
+- ✅ **Token details** (name, symbol, supply amount)
 
 ## 📋 Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Solana CLI tools](https://solana.com/docs/intro/installation)
-- SOL in your wallet for transaction fees
-  - Devnet: Use the faucet at [faucet.solana.com](https://faucet.solana.com)
-  - Mainnet: Purchase SOL from an exchange
+Before you begin, make sure you have:
+
+### Required
+- **[Node.js](https://nodejs.org/)** (v18 or higher) - Download and install from nodejs.org
+- **A Solana wallet** with some SOL for transaction fees:
+  - **For testing (devnet)**: Free SOL from [faucet.solana.com](https://faucet.solana.com)
+  - **For production (mainnet)**: Purchase SOL from an exchange like Coinbase, Binance, or Kraken
+
+### Optional (Only for Advanced Features)
+- **[Solana CLI tools](https://solana.com/docs/intro/installation)** - Only needed if you want to:
+  - Use the default Solana CLI wallet
+  - Generate vanity addresses manually
+  - Use advanced Solana commands
+
+> 💡 **Beginner Tip**: If you only have a Phantom or Solflare wallet, that's all you need! The interactive mode will help you convert your private key.
+
+## 🎓 Complete Beginner? Start Here!
+
+Never created a token before? No problem! Here's everything you need:
+
+1. **Install Node.js**: Go to [nodejs.org](https://nodejs.org/), download, and install it
+2. **Get a Solana wallet**: Download [Phantom](https://phantom.app/) or [Solflare](https://solflare.com/) (free!)
+3. **Get some SOL** (required for creating the token):
+4. **Prepare your image**: Have a 512x512px PNG or JPG ready for your token icon
+5. **Follow the Quick Start below** ⬇️
+
+> ⚠️ **Important**: You MUST have SOL in your wallet before creating a token - it's needed to pay for uploading the image/metadata to Arweave and creating the token on Solana. ~0.1-~0.3 is enough.
 
 ## 🚀 Quick Start
 
-### Installation
+### Step 1: Installation
+
+Clone the repository and install dependencies:
 
 ```bash
+# Clone the repository
 git clone https://github.com/juliuspleunes4/mintly-cli.git
+
+# Navigate to the directory
 cd mintly-cli
+
+# Install dependencies (this may take a minute)
 npm install
 ```
 
-### Wallet Setup
+### Step 2: Run the Interactive Wizard
 
-You have two options for wallet configuration:
+The easiest way to get started:
+
+```bash
+npm start
+```
+
+That's it! The colorful wizard will guide you through the rest. ✨
+
+---
+
+## 🎯 Two Ways to Use Mintly
+
+### 🌟 Option A: Interactive Mode (Recommended for Beginners)
+
+The easiest way to create your token! An interactive wizard guides you through every step with colorful prompts.
+
+#### How to Use Interactive Mode
+
+**Windows Users (Easiest):**
+1. Double-click `mintly.bat`
+2. Follow the colorful prompts in the terminal window
+
+**All Users (Command Line):**
+```bash
+npm start
+```
+
+#### What the Interactive Wizard Does
+
+The wizard walks you through 5 simple steps:
+
+1. **💳 Wallet Setup** - Choose how to provide your wallet:
+   - Enter your Phantom/Solflare private key (it will be converted automatically)
+   - Use an existing `wallet.json` file
+   - Use your default Solana CLI wallet (if installed)
+
+2. **📝 Token Details** - Answer a few questions:
+   - What's your token name? (e.g., "My Token")
+   - What's the symbol? (e.g., "MTK")
+   - How many tokens to create? (e.g., 1000000)
+   - Which network? (Devnet for testing, Mainnet for real)
+
+3. **🖼️ Token Image** - Provide your token's icon:
+   - Enter the path to your image file
+   - Or use an existing image in the `src/` folder
+
+4. **🎯 Vanity Address (Optional)** - Want a cool token address?
+   - Like "MINT..." instead of random letters
+   - This step is completely optional!
+
+5. **✅ Review & Create** - Confirm everything looks good and create!
+
+> 💡 **Perfect for**: First-time users, quick token creation, or when you want a guided experience
+
+### 🛠️ Option B: Manual Mode (Advanced Users)
+
+For developers who prefer direct control or want to automate the process.
+
+#### Wallet Setup
+
+You have three options for wallet configuration:
 
 **Option 1: Use Default Solana CLI Wallet**
 - The tool will automatically use your [default Solana wallet](https://solana.com/docs/intro/installation#create-wallet)
@@ -72,7 +176,12 @@ If you have a base58-encoded private key (from Phantom, Solflare, etc.):
    ```
 4. This will automatically create `src/wallet.json` with your wallet
 
-## 📝 Step-by-Step Guide
+**Option 3: Manual wallet.json**
+- Place your wallet keypair JSON directly in `src/wallet.json`
+
+---
+
+## 📝 Manual Mode: Step-by-Step Guide
 
 ### Step 1: Configure Token Metadata
 
@@ -115,7 +224,7 @@ Replace `src/image.png` with your token image:
 
 ### Step 3: Generate Vanity Address (Optional)
 
-Create a custom token address with a specific prefix:
+Create a custom token address with a specific prefix (Linux/Mac only):
 
 ```bash
 cd src
@@ -126,6 +235,7 @@ solana-keygen grind --starts-with MINT:1 | tee /dev/tty | grep -oE '[1-9A-HJ-NP-
 - Replace `MINT:1` with your desired prefix
 - Prefixes longer than 4 characters may take significant time
 - This overwrites `token-mint-address.json` - back it up if needed
+- **Note:** This command is for Linux/Mac. Windows users should use the interactive mode for vanity addresses.
 
 ### Step 4: Create Your Token
 
@@ -178,8 +288,122 @@ node convert-key.js
 
 - **Testing First:** Always test on devnet before deploying to mainnet
 - **Backup Keys:** Keep secure backups of your wallet files and private keys
-- **Network Fees:** Ensure you have enough SOL for transaction fees
+- **Network Fees:** Ensure you have enough SOL for transaction fees (~0.01 SOL on devnet, varies on mainnet)
 - **Image Hosting:** Images are uploaded to decentralized storage (Arweave via Irys)
+- **Token Amount:** Remember to account for decimals (e.g., 1,000,000 with 6 decimals = 1 token)
+
+## ❓ Frequently Asked Questions
+
+<details>
+<summary><b>How do I get my private key from Phantom/Solflare?</b></summary>
+
+**Phantom:**
+1. Click the settings icon (⚙️)
+2. Click "Security & Privacy"
+3. Click "Export Private Key"
+4. Enter your password
+5. Copy the key shown (this is your base58 private key)
+
+**Solflare:**
+1. Click the menu (☰)
+2. Click "Settings"
+3. Click "Export Private Key"
+4. Copy the key shown
+
+⚠️ **Never share your private key with anyone!**
+</details>
+
+<details>
+<summary><b>What network should I use?</b></summary>
+
+- **Devnet**: Free testing environment. Use this first! Get free SOL from [faucet.solana.com](https://faucet.solana.com)
+- **Mainnet**: Real Solana network. Costs real SOL. Only use after testing on devnet.
+</details>
+
+<details>
+<summary><b>How much does it cost?</b></summary>
+
+- **CLI Version (this tool)**: Only Solana network fees (~0.01 SOL ≈ $0.10-$2 depending on SOL price)
+- **Web Version**: Network fees + small service fee
+- **No hidden fees!**
+</details>
+
+<details>
+<summary><b>Can I create tokens for free?</b></summary>
+
+Yes! Use devnet for completely free testing. You can create unlimited test tokens with free devnet SOL from the faucet.
+</details>
+
+<details>
+<summary><b>What's a vanity address?</b></summary>
+
+A vanity address is a token address that starts with specific letters you choose (e.g., `MINTabc123...` instead of `7vfCXtU...`). It's purely cosmetic and completely optional. It can take a while to generate if you choose more than 4 characters.
+</details>
+
+<details>
+<summary><b>Where is my token after creation?</b></summary>
+
+Your token will be:
+1. Created on the Solana blockchain
+2. Automatically minted to your wallet
+3. Viewable on [Solana Explorer](https://explorer.solana.com) (link provided after creation)
+
+The CLI will give you the mint address - save this! It's your token's unique identifier.
+</details>
+
+<details>
+<summary><b>Can I edit my token after creation?</b></summary>
+
+Once created, you cannot change:
+- Token name
+- Token symbol  
+- Token supply (but you can mint more if you control mint authority)
+- Token decimals
+
+You CAN update the metadata (image, description) if you have update authority.
+</details>
+
+## 🐛 Troubleshooting
+
+### "Node.js not found" or "npm not found"
+**Solution:** Install [Node.js](https://nodejs.org/) (v18 or higher) and restart your terminal.
+
+### "wallet.json not found"
+**Solution:** Use the interactive mode (`npm start`) and choose "Enter base58 private key" option to create the wallet automatically.
+
+### "Insufficient funds" error
+**Solutions:**
+- **On devnet**: Get free SOL from [faucet.solana.com](https://faucet.solana.com)
+- **On mainnet**: Add more SOL to your wallet (you need ~0.01-0.02 SOL for token creation)
+
+### "Default Solana wallet not found"
+**Solution:** Either:
+1. Install [Solana CLI tools](https://solana.com/docs/intro/installation) and run `solana-keygen new`, OR
+2. Use interactive mode and choose the "base58 private key" option instead
+
+### Command window closes immediately
+**Solution:** This is fixed in the latest version. Make sure you've pulled the latest changes. The window should now pause with "Press any key to exit..."
+
+### Colors not displaying properly
+**Solution:** Use Windows Terminal, PowerShell, or a modern terminal emulator. CMD may not support all colors.
+
+### "Invalid base58 private key"
+**Solution:** Make sure you:
+- Copied the entire key (no spaces before/after)
+- Used the private key, not the public key
+- Exported from the correct wallet
+
+### Image upload fails
+**Solutions:**
+- Check your internet connection
+- Make sure the image file exists and is a valid PNG/JPG
+- Try a smaller image (max 10MB recommended)
+- Ensure the image path has no special characters
+
+### Need More Help?
+- [Open an issue](https://github.com/juliuspleunes4/mintly-cli/issues) on GitHub
+- Check [Solana documentation](https://solana.com/docs)
+- Visit [www.mintly.cc](https://www.mintly.cc) for the web version
 
 ## 🤝 Contributing
 
