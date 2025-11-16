@@ -1,3 +1,5 @@
-# Hide CSS and HTML from GitHub language statistics
+# Hide CSS, HTML and Batchfiles from GitHub language statistics
 *.css linguist-detectable=false
 *.html linguist-detectable=false
+*.bat linguist-detectable=false
+*.cmd linguist-detectable=false
