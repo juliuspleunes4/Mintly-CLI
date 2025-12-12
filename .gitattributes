@@ -1,5 +1,2 @@
-# Hide CSS, HTML and Batchfiles from GitHub language statistics
-*.css linguist-detectable=false
-*.html linguist-detectable=false
-*.bat linguist-detectable=false
-*.cmd linguist-detectable=false
+# Set TypeScript as only language for GitHub Linguist
+* linguist-language=TypeScript
